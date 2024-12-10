@@ -42,6 +42,7 @@ services:
       POSTGRES_USER:
       POSTGRES_PASSWORD:
       POSTGRES_DB:
+    env_file: .env
     volumes:
       - db-dev-data:/var/lib/postgresql/data
       - ./api-dev/scripts/docker/dev/dumps/:/usr/dumps
