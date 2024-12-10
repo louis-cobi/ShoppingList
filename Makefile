@@ -113,8 +113,8 @@ migration-generate: ## Create a new migration, eg: `make migration-generate name
 .PHONY: migration-generate
 
 clean-db: ## Clean database data
-	$(ENV) $(DKC) $(DKC_CFG) rm -s -f db
-	$(ENV) $(DK) volume rm db-data
+	$(ENV) $(DKC) $(DKC_CFG) rm -s -f db-dev
+	$(ENV) $(DK) volume rm db-dev-data
 .PHONY: clean-db
 
 # - ###### - #

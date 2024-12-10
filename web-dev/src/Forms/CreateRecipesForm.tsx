@@ -37,14 +37,32 @@ export function CreateRecipesForm(): JSX.Element {
       return;
     }
 
-    await createRecipe({
-      name,
-      timeToCook,
-      numberOfPeople,
-      ingredients: selectedIngredients.map((e) => e.id),
-    });
+    const tags = selectedIngredients.map((e) => e.tag);
+    const hasMultipleProteins = tags.filter(tag => tag === "protéine").length > 1;
+    const hasMultipleFéculents = tags.filter(tag => tag === "féculent").length > 1;
 
-    resetFields();
+    if (hasMultipleProteins || hasMultipleFéculents) {
+      alert("Invalid recipe: Only one protein and one féculent are allowed.");
+      return;
+    }
+
+    try {
+      await createRecipe({
+        name,
+        timeToCook,
+        numberOfPeople,
+        ingredients: selectedIngredients.map((e) => e.id),
+      });
+  
+      resetFields();
+    } catch (error: any) {
+      if (error.response?.status === 400) {
+        alert(`Error: ${error.response.data}`);
+      } else {
+        console.error("Unexpected error:", error);
+        alert("An unexpected error occurred. Please try again.");
+      }
+    }
   };
 
   if (status === "error") {
@@ -83,7 +101,7 @@ export function CreateRecipesForm(): JSX.Element {
               multiple
               id="combo-box-demo"
               options={ingredients.map((e: Ingredient) => {
-                return { label: e.name, id: e.id };
+                return { label: e.name, id: e.id, tag: e.tag };
               })}
               renderInput={(params: any) => (
                 <TextField {...params} label="Ingredients" />

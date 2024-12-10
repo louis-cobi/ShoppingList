@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, TextField } from "@mui/material";
+import { Box, Button, FormControl, TextField, Select, MenuItem  } from "@mui/material";
 import { useState } from "react";
 import { CardCustom } from "../Components/CardCustom";
 import { useMutationIngredientCreate } from "../Hooks/Mutation/IngredientsMutation";
@@ -8,10 +8,12 @@ export function CreateIngredientForm(): JSX.Element {
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState<number>(0);
+  const [tag, setTag] = useState<"légumes" | "protéine" | "féculent">("légumes");
 
   const resetFields = () => {
     setName("");
     setPrice(0);
+    setTag("légumes");
   };
 
   const handlerSubmitNewIngredient = async () => {
@@ -22,6 +24,7 @@ export function CreateIngredientForm(): JSX.Element {
     await createIngredient({
       name,
       price,
+      tag,
     });
 
     resetFields();
@@ -63,7 +66,17 @@ export function CreateIngredientForm(): JSX.Element {
               multiplied by the number of people in the recipe.
             </span>
           </FormControl>
-
+          <FormControl fullWidth margin="normal">
+            <Select
+              value={tag}
+              onChange={(e) => setTag(e.target.value as "légumes" | "protéine" | "féculent")}
+              label="Tag"
+            >
+              <MenuItem value="légumes">Légumes</MenuItem>
+              <MenuItem value="protéine">Protéine</MenuItem>
+              <MenuItem value="féculent">Féculent</MenuItem>
+            </Select>
+          </FormControl>
           <FormControl margin="normal">
             <Button onClick={handlerSubmitNewIngredient} variant="contained">
               Submit

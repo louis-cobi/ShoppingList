@@ -7,6 +7,11 @@ export class IngredientService {
     return ingredient;
   }
 
+  static async getById(id: number): Promise<Ingredient | null> {
+    const ingredient = await getRepository(Ingredient).findOne(id);
+    return ingredient || null;
+  }
+
   static async create(ingredient: Ingredient): Promise<Ingredient> {
     const newIngredient = await getRepository(Ingredient).save(ingredient);
     return newIngredient;

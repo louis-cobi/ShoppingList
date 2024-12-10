@@ -30,4 +30,15 @@ export class RecipeService {
   static async delete(id: number): Promise<void> {
     await getRepository(Recipe).delete(id);
   }
+
+  static async isProteinUnique(proteinId: number): Promise<boolean> {
+    const recipes = await getRepository(Recipe)
+      .createQueryBuilder("recipe")
+      .leftJoinAndSelect("recipe.ingredients", "ingredient")
+      .where("ingredient.id = :proteinId", { proteinId })
+      .andWhere("ingredient.tag = :tag", { tag: "protéine" })
+      .getCount();
+
+    return recipes === 0;
+  }
 }
