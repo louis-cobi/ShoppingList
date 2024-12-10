@@ -4,7 +4,7 @@ import { useQueryIngredientList } from "../Hooks/Query/IngredientQuery";
 import { Loader } from "../Components/Loader";
 import { ErrorPage } from "./ErrorPage";
 import { IngredientTable } from "../Tables/IngredientsTable";
-import { CreateIngredientForm } from "../Forms/CreateIngredientForm";
+import { CreateIngredientForm } from "../Components/organisms/CreateIngredientForm"
 
 export function IngredientPage(): JSX.Element {
   const [isCreationMode, setIsCreationMode] = useState(false);

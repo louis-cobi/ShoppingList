@@ -38,6 +38,7 @@ export function IngredientTable({
           <TableHead>
             <TableRow>
               <TableCell>My ingredients</TableCell>
+              <TableCell align="right">Tag</TableCell>
               <TableCell align="right">Price</TableCell>
               <TableCell align="right">Delete</TableCell>
             </TableRow>
