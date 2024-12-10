@@ -23,11 +23,24 @@ export class IngredientController {
 
   public static async update(req: any, res: any, next: any): Promise<void> {
     try {
-      const recipe = await IngredientService.update(req.body);
-      res.send(recipe);
+      const { id, tag } = req.body;
+ 
+      const nonValidRecipes = await IngredientService.checkRecipe(id, tag);
+  
+      if (nonValidRecipes.length > 0) {
+        return res.status(400).json({
+          message: "Les recettes suivantes ne sont pas conformes",
+          recipes: nonValidRecipes
+        });
+      }
+  
+      const updatedIngredient = await IngredientService.update(req.body);
+      
+      console.log("Updating ingredient with data:", req.body);
+      res.json(updatedIngredient);
     } catch (err) {
       console.error("[IngredientController.update] Error updating recipe", err);
-      res.send(500);
+      res.status(500).json({ message: "Erreur serveur" });
     }
   }
 

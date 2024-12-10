@@ -5,9 +5,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Select, MenuItem } from "@mui/material";
 import { Ingredient } from "../Types/Ingredient";
-import { useMutationIngredientDelete } from "../Hooks/Mutation/IngredientsMutation";
+import { useMutationIngredientDelete, useMutationIngredientUpdate } from "../Hooks/Mutation/IngredientsMutation";
 
 export function IngredientTable({
   ingredients,
@@ -15,9 +15,20 @@ export function IngredientTable({
   ingredients: Ingredient[];
 }): JSX.Element {
   const { mutateAsync: deleteIngredient } = useMutationIngredientDelete();
+  const { mutateAsync: updateIngredient } = useMutationIngredientUpdate();
 
   const handlerButtonDelete = async (ingredient: Ingredient) => {
     await deleteIngredient(ingredient.id);
+  };
+
+  const handleTagChange = async (ingredient: Ingredient, newTag: string) => {
+    try {
+      await updateIngredient({ ...ingredient, tag: newTag });
+    } catch (error: any) {
+      if (error.response?.status === 400) {
+        alert(`The following recipes will be invalid: ${error.response.data.recipes}`);
+      }
+    }
   };
 
   return (
@@ -40,6 +51,16 @@ export function IngredientTable({
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
+                <TableCell align="right">
+                    <Select
+                      value={row.tag}
+                      onChange={(e) => handleTagChange(row, e.target.value)}
+                    >
+                      <MenuItem value="protéine">Protéine</MenuItem>
+                      <MenuItem value="féculent">Féculent</MenuItem>
+                      <MenuItem value="légumes">Légumes</MenuItem>
+                    </Select>
+                  </TableCell>
                 <TableCell align="right">{row.price} €</TableCell>
                 <TableCell align="right">
                   <Button onClick={() => handlerButtonDelete(row)}>
